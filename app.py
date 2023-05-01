@@ -11,8 +11,9 @@ def recommend(movie):
     global musics, similarity
     index = musics[musics['title'] == movie].index[0]
     distances = similarity[index]
-    musics_list = sorted(list(enumerate(distances)),
-                         reverse=True, key=lambda x: x[1])[1:6]
+    musics_with_index = list(enumerate(distances))
+    musics_list = sorted(musics_with_index, reverse=True,
+                         key=lambda x: x[1])[1:6]
     recommended_musics = []
     for i in musics_list:
         recommended_musics.append(musics.iloc[i[0]].title)
