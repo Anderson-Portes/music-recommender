@@ -3,8 +3,7 @@ import pickle
 import pandas as pd
 
 similarity = pickle.load(open('similarity.pkl', 'rb'))
-musics_dict = pickle.load(open('data.pkl', 'rb'))
-musics = pd.DataFrame(musics_dict)
+musics = pd.DataFrame(pickle.load(open('data.pkl', 'rb')))
 
 
 def recommend(movie):
@@ -16,17 +15,20 @@ def recommend(movie):
                          key=lambda x: x[1])[1:6]
     recommended_musics = []
     for i in musics_list:
-        recommended_musics.append(musics.iloc[i[0]].title)
+        music = musics.iloc[i[0]]
+        recommended_musics.append(f'{music.artist} - {music.title}')
     return recommended_musics
 
 
 st.title('Music Recommender System')
 selected_music = st.selectbox(
     'Select the music',
-    musics['title'].values
+    musics['artist'].values + ' - '+musics['title'].values
 )
 
 if st.button('Recommend'):
-    recommendations = recommend(selected_music)
+    title = selected_music.split("- ", 1)[1]
+    print(title)
+    recommendations = recommend(title)
     for i in recommendations:
         st.write(i)
